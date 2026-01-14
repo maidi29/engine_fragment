@@ -1,6 +1,5 @@
 import { MaterialDefinition } from "../../model/model-types";
 import { VirtualFragmentsModel } from "../virtual-fragments-model";
-import { ParserHelper } from "../../utils/geometry/parser-helper";
 
 export class HighlightHelper {
   private readonly _highlightProps = [
@@ -115,56 +114,8 @@ export class HighlightHelper {
         materials.push(newHigh);
         return;
       }
-      // When preserveOriginalMaterial is set, merge with the item's base material
-      // so that deduplication can work based on the full material properties
-      if (highlightMaterial.preserveOriginalMaterial) {
-        const baseMaterial = this.getItemBaseMaterial(model, itemId);
-        if (baseMaterial) {
-          const merged = this.mergeWithBaseMaterial(
-            highlightMaterial,
-            baseMaterial,
-          );
-          materials.push(merged);
-          return;
-        }
-      }
       materials.push(highlightMaterial);
     };
-  }
-
-  private getItemBaseMaterial(
-    model: VirtualFragmentsModel,
-    itemId: number,
-  ): MaterialDefinition | null {
-    const meshes = model.data.meshes();
-    if (!meshes) return null;
-    // Get sample indices for this item (itemId is not the same as sampleIndex)
-    const sampleIndices = model.boxes.sampleOf(itemId);
-    if (!sampleIndices || sampleIndices.length === 0) return null;
-    // Use the first sample's material as the base
-    const sampleIndex = sampleIndices[0];
-    const sample = meshes.samples(sampleIndex);
-    if (!sample) return null;
-    const materialIndex = sample.material();
-    const material = meshes.materials(materialIndex);
-    if (!material) return null;
-    return ParserHelper.parseMaterial(material);
-  }
-
-  private mergeWithBaseMaterial(
-    highlight: MaterialDefinition,
-    base: MaterialDefinition,
-  ): MaterialDefinition {
-    const merged = { ...highlight } as MaterialDefinition;
-    for (const prop of this._highlightProps) {
-      if (
-        merged[prop as keyof MaterialDefinition] === undefined &&
-        base[prop as keyof MaterialDefinition] !== undefined
-      ) {
-        (merged as any)[prop] = base[prop as keyof MaterialDefinition];
-      }
-    }
-    return merged;
   }
 
   private getCreateEvent(model: VirtualFragmentsModel, ids: number[]) {
