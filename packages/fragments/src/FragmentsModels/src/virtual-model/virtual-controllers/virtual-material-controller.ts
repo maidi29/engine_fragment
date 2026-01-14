@@ -65,12 +65,10 @@ export class VirtualMaterialController {
   }
 
   private checkMaterialExists(material: MaterialDefinition, ids: number[]) {
-    // Don't deduplicate materials with preserveOriginalMaterial flag,
-    // as they need to preserve original material properties (like opacity)
-    // which may differ from existing materials with the same color
-    if (material.preserveOriginalMaterial) {
-      return false;
-    }
+    // Materials with preserveOriginalMaterial CAN be deduplicated if they share
+    // the same visual properties (color, opacity, transparent, depthTest, depthWrite, renderedFaces).
+    // MaterialUtils.isSame now checks all these properties, so items with the same
+    // original material properties and same new color will share a single material.
     const count = this._list.length;
     for (let i = 0; i < count; i++) {
       const current = this._list[i];

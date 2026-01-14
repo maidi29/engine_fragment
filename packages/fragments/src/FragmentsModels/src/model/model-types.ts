@@ -122,6 +122,11 @@ export type MaterialDefinition = {
    * @default true
    */
   depthTest?: boolean;
+  /**
+   * Whether to have depth write enabled when rendering this material.
+   * @default true
+   */
+  depthWrite?: boolean;
 
   /** The local ID of the material */
   localId?: number;

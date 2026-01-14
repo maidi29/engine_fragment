@@ -9,7 +9,17 @@ export class MaterialUtils {
     const facesA = a.renderedFaces;
     const facesB = b.renderedFaces;
     const isSameFaces = this.checkSame(facesA, facesB, RenderedFaces.ONE);
-    return isSameColor && isSameOpacity && isSameFaces;
+    const isSameTransparent = this.checkSame(a.transparent, b.transparent, false);
+    const isSameDepthTest = this.checkSame(a.depthTest, b.depthTest, true);
+    const isSameDepthWrite = this.checkSame(a.depthWrite, b.depthWrite, true);
+    return (
+      isSameColor &&
+      isSameOpacity &&
+      isSameFaces &&
+      isSameTransparent &&
+      isSameDepthTest &&
+      isSameDepthWrite
+    );
   }
 
   private static checkSame(a: any, b: any, fallback: any): boolean {
