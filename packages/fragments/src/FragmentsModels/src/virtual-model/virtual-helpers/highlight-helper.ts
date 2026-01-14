@@ -7,8 +7,6 @@ export class HighlightHelper {
     "opacity",
     "transparent",
     "renderedFaces",
-    "depthTest",
-    "depthWrite",
   ];
 
   resetHighlight(model: VirtualFragmentsModel, items: number[]): void {
