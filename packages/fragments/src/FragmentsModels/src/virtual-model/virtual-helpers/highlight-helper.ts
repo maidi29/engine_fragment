@@ -138,7 +138,12 @@ export class HighlightHelper {
   ): MaterialDefinition | null {
     const meshes = model.data.meshes();
     if (!meshes) return null;
-    const sample = meshes.samples(itemId);
+    // Get sample indices for this item (itemId is not the same as sampleIndex)
+    const sampleIndices = model.boxes.sampleOf(itemId);
+    if (!sampleIndices || sampleIndices.length === 0) return null;
+    // Use the first sample's material as the base
+    const sampleIndex = sampleIndices[0];
+    const sample = meshes.samples(sampleIndex);
     if (!sample) return null;
     const materialIndex = sample.material();
     const material = meshes.materials(materialIndex);
